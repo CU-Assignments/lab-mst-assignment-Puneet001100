@@ -1,0 +1,145 @@
+Problem 1: Matching Words
+import java.util.*;
+
+public class MatchFound {
+    public static String matchFound(String input1, String input2) {
+        String[] words = input2.split(":");
+        String regex = input1.replace('_', '.');
+        List<String> matchedWords = new ArrayList<>();
+
+        for (String word : words) {
+            if (word.matches(regex)) {
+                matchedWords.add(word.toUpperCase());
+            }
+        }
+
+        return String.join(":", matchedWords);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(matchFound("h_llo", "hello:hallo:hullo:yellow"));
+    }
+}
+
+Problem 2: Encoding Three Strings
+public class EncodeStrings {
+    public static String[] encodeThreeStrings(String input1, String input2, String input3) {
+        String[] parts1 = splitString(input1);
+        String[] parts2 = splitString(input2);
+        String[] parts3 = splitString(input3);
+
+        String output1 = parts1[0] + parts2[1] + parts3[2];
+        String output2 = parts1[1] + parts2[2] + parts3[0];
+        String output3 = parts1[2] + parts2[0] + parts3[1];
+
+        output3 = toggleCase(output3);
+
+        return new String[]{output1, output2, output3};
+    }
+
+    private static String[] splitString(String str) {
+        int len = str.length();
+        int partSize = len / 3;
+        int remainder = len % 3;
+        
+        int frontSize = partSize + (remainder == 2 ? 1 : 0);
+        int middleSize = partSize + (remainder == 1 ? 1 : 0);
+        int endSize = partSize;
+
+        return new String[]{
+            str.substring(0, frontSize),
+            str.substring(frontSize, frontSize + middleSize),
+            str.substring(frontSize + middleSize)
+        };
+    }
+
+    private static String toggleCase(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : str.toCharArray()) {
+            sb.append(Character.isUpperCase(c) ? Character.toLowerCase(c) : Character.toUpperCase(c));
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        String[] result = encodeThreeStrings("John", "Johny", "Janardhan");
+        for (String res : result) {
+            System.out.println(res);
+        }
+    }
+}
+
+Problem 3: Alphabetic Sum Encoding
+public class AlphabeticSumEncoding {
+    public static String encodeString(String input) {
+        StringBuilder output = new StringBuilder();
+        
+        for (int i = 0; i < input.length(); i++) {
+            char c1 = input.charAt(i);
+            output.append(c1);
+
+            if (Character.isLetter(c1) && i + 1 < input.length()) {
+                char c2 = input.charAt(i + 1);
+                if (Character.isLetter(c2)) {
+                    int sum = (Character.toLowerCase(c1) - 'a' + 1) + (Character.toLowerCase(c2) - 'a' + 1);
+                    char insertChar = sum % 26 == 0 ? '0' : (char) ('a' + (sum % 26) - 1);
+                    output.append(insertChar);
+                }
+            }
+        }
+
+        return output.toString().toLowerCase();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(encodeString("ay"));
+        System.out.println(encodeString("ac"));
+        System.out.println(encodeString("ac 12a"));
+    }
+}
+
+
+Problem 4: Find Extra Letter
+public class FindExtraLetter {
+    public static char findTheDifference(String s, String t) {
+        int charSum = 0;
+        for (char c : t.toCharArray()) charSum += c;
+        for (char c : s.toCharArray()) charSum -= c;
+        return (char) charSum;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(findTheDifference("abcd", "abcde"));
+    }
+}
+
+
+Problem 5: Next Greater Element
+import java.util.*;
+
+public class NextGreaterElement {
+    public static int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        Map<Integer, Integer> map = new HashMap<>();
+        Stack<Integer> stack = new Stack<>();
+
+        for (int num : nums2) {
+            while (!stack.isEmpty() && stack.peek() < num) {
+                map.put(stack.pop(), num);
+            }
+            stack.push(num);
+        }
+
+        for (int i = 0; i < nums1.length; i++) {
+            nums1[i] = map.getOrDefault(nums1[i], -1);
+        }
+
+        return nums1;
+    }
+
+    public static void main(String[] args) {
+        int[] result = nextGreaterElement(new int[]{4, 1, 2}, new int[]{1, 3, 4, 2});
+        System.out.println(Arrays.toString(result));
+    }
+}
+
+
